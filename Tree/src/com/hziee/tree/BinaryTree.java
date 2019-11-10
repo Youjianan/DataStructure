@@ -2,6 +2,9 @@ package com.hziee.tree;
 
 import com.hziee.node.BinaryNode;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class BinaryTree<T> {
     private BinaryNode<T> root;
     public int n0 = 0;
@@ -80,9 +83,25 @@ public class BinaryTree<T> {
         return 1 + size(node.left) + size(node.right);
     }
 
-    public boolean equals(BinaryTree<T> tree) {
-
-        return true;
+    public int getHeightForData(T data) {
+        Queue<BinaryNode<T>> queue = new LinkedList<>();
+        queue.add(root);
+        int level = 1;
+        out:
+        while (!queue.isEmpty()) {
+            int level_length = queue.size();
+            for (int i = 0; i < level_length; ++i) {
+                if (queue.peek() != null && queue.peek().data == data)
+                    break out;
+                BinaryNode<T> node = queue.remove();
+                if (node.left != null)
+                    queue.add(node.left);
+                if (node.right != null)
+                    queue.add(node.right);
+            }
+            level++;
+        }
+        return level;
     }
 
     public BinaryNode<T> insert(BinaryNode<T> parent, T data, boolean leftChild) {
@@ -158,6 +177,27 @@ public class BinaryTree<T> {
         }
     }
 
+    /*后根次序非递归实现*/
+    public void postOrderTraversal() {
+        sb.delete(0, sb.length());
+        LinkedList<BinaryNode<T>> stack = new LinkedList<>();
+        if (root == null) {
+            return;
+        }
+        stack.add(root);
+        while (!stack.isEmpty()) {
+            BinaryNode<T> node = stack.pollLast();
+            sb.append(" ").append(node.data);
+            if (node.left != null) {
+                stack.add(node.left);
+            }
+            if (node.right != null) {
+                stack.add(node.right);
+            }
+        }
+        sb.reverse();
+    }
+
     public void exchange() {
         exchange(this.root);
     }
@@ -174,8 +214,8 @@ public class BinaryTree<T> {
         exchange(node.right);
     }
 
-    public String print() {
-        return sb.toString();
+    public void print() {
+        System.out.println(sb.toString());
     }
 
     @Override
@@ -189,8 +229,4 @@ public class BinaryTree<T> {
             return "";
         return node.data.toString() + toString(node.left) + toString(node.right);
     }
-
-    /*public int height() {
-
-    }*/
 }
