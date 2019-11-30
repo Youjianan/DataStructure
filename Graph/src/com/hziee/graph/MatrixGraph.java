@@ -3,6 +3,7 @@ package com.hziee.graph;
 import com.hziee.triple.Triple;
 
 public class MatrixGraph<T> extends AbstractGraph<T> {
+
     protected Matrix matrix;
 
     public MatrixGraph(int length) {
